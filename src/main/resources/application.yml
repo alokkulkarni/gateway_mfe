@@ -1,0 +1,22 @@
+server:
+  port: 8880
+spring:
+  cloud:
+    gateway:
+      enabled: true
+      routes:
+        - id: olb_route
+          uri: http://localhost:8880
+          predicates:
+            - Path=/olb/**
+          filters:
+            - RewritePath=/olb/(?<segment>/?.*), /$\{segment}
+        - id: generic_route
+          uri: http://localhost:5500
+          predicates:
+            - Path=/**
+          filters:
+            - RewritePath=/(?<segment>/?.*), /$\{segment}
+
+
+
